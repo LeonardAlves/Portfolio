@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }}{% endblock %}
+
+{% block content %}
+<a href="/" class="text-slate-400 hover:text-white text-sm">← Voltar</a>
+<h1 class="text-3xl font-bold mt-4 mb-2">{{ project.title }}</h1>
+<p class="text-slate-300 mb-6">{{ project.description }}</p>
+
+<div class="flex flex-wrap gap-2 mb-6">
+  {% for t in project.tags %}
+  <span class="text-sm px-3 py-1 rounded-full bg-slate-800">{{ t }}</span>
+  {% endfor %}
+</div>
+
+<div class="flex gap-3">
+  {% if project.repo %}
+  <a href="{{ project.repo }}" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700">Código</a>
+  {% endif %}
+  {% if project.demo %}
+  <a href="{{ project.demo }}" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500">Demo</a>
+  {% endif %}
+</div>
+{% endblock %}

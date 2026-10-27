@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Meu Portfólio{% endblock %}</title>
+  <meta name="description" content="Portfólio de [seu nome], desenvolvedor(a) full stack.">
+  <link href="{{ url_for('static', path='css/output.css') }}" rel="stylesheet">
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased">
+  <header class="max-w-4xl mx-auto px-6 py-6 flex justify-between items-center">
+    <a href="/" class="font-bold text-lg">Desenvolvedor Leonardo</a>
+    <nav class="flex gap-4 text-slate-400">
+      <a href="https://github.com/LeonardAlves" class="hover:text-white">GitHub</a>
+      <a href="https://www.linkedin.com/in/leonardo-santos-alves/" class="hover:text-white">LinkedIn</a>
+    </nav>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-6 py-10">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="max-w-4xl mx-auto px-6 py-10 text-slate-500 text-sm">
+    © {{ 2026 }} · Feito com Python, Jinja, Tailwind e HTMX
+  </footer>
+</body>
+</html>

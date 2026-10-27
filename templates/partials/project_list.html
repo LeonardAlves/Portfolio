@@ -1,0 +1,14 @@
+{% for p in projects %}
+<a href="/projects/{{ p.slug }}"
+   class="block p-5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-600 transition">
+  <h3 class="font-semibold text-lg mb-1">{{ p.title }}</h3>
+  <p class="text-slate-400 text-sm mb-3">{{ p.summary }}</p>
+  <div class="flex flex-wrap gap-1">
+    {% for t in p.tags %}
+    <span class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300">{{ t }}</span>
+    {% endfor %}
+  </div>
+</a>
+{% else %}
+<p class="text-slate-500">Nenhum projeto com essa tag.</p>
+{% endfor %}

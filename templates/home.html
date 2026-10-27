@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="mb-16">
+  <h1 class="text-4xl font-bold mb-4">Olá, eu sou Leonardo Alves 👋</h1>
+  <p class="text-slate-400 text-lg max-w-2xl">
+    Desenvolvedor full stack em formação, construindo projetos para aprender
+    como as peças de uma aplicação se conectam.
+  </p>
+</section>
+
+<section>
+  <h2 class="text-2xl font-semibold mb-4">Projetos</h2>
+
+  <div class="flex flex-wrap gap-2 mb-6">
+    <button hx-get="/projects" hx-target="#project-list"
+            class="px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-sm">
+      Todos
+    </button>
+    {% for tag in tags %}
+    <button hx-get="/projects?tag={{ tag }}" hx-target="#project-list"
+            class="px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-sm">
+      {{ tag }}
+    </button>
+    {% endfor %}
+  </div>
+
+  <div id="project-list" class="grid gap-4 sm:grid-cols-2">
+    {% include "partials/project_list.html" %}
+  </div>
+</section>
+{% endblock %}

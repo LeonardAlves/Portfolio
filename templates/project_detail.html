@@ -3,8 +3,9 @@
 
 {% block content %}
 <a href="/" class="text-slate-400 hover:text-white text-sm">← Voltar</a>
-<h1 class="text-3xl font-bold mt-4 mb-2">{{ project.title }}</h1>
-<p class="text-slate-300 mb-6">{{ project.description }}</p>
+
+<h1 class="text-4xl font-bold mt-4 mb-4">{{ project.title }}</h1>
+<p class="text-slate-300 text-lg max-w-3xl mb-6">{{ project.description }}</p>
 
 <div class="flex flex-wrap gap-2 mb-6">
   {% for t in project.tags %}
@@ -12,12 +13,152 @@
   {% endfor %}
 </div>
 
-<div class="flex gap-3">
+{% if project.images %}
+{% set many = project.images|length > 2 %}
+<section class="mt-10 mb-10" data-carousel aria-label="Capturas de tela">
+  <div class="relative">
+    <div data-track
+         class="flex -mx-2 overflow-x-auto snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {% for img in project.images %}
+      <div class="shrink-0 snap-start basis-full md:basis-1/2 px-2">
+        <img src="{{ img }}"
+             alt="Captura de tela {{ loop.index }} de {{ project.title }}"
+             loading="lazy"
+             data-zoom="{{ loop.index0 }}"
+             class="w-full aspect-video object-cover rounded-xl border border-slate-800 bg-slate-900 cursor-zoom-in hover:border-emerald-400 transition">
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if project.images|length > 1 %}
+    <button data-prev type="button" aria-label="Imagens anteriores"
+            class="{{ '' if many else 'md:hidden' }} absolute left-2 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-slate-950/80 hover:bg-slate-950 text-xl">‹</button>
+    <button data-next type="button" aria-label="Próximas imagens"
+            class="{{ '' if many else 'md:hidden' }} absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-slate-950/80 hover:bg-slate-950 text-xl">›</button>
+    {% endif %}
+  </div>
+  <p class="text-slate-500 text-sm mt-3">Clique em uma imagem para ampliar.</p>
+</section>
+
+<dialog data-lightbox
+        class="m-auto w-screen h-screen max-w-none max-h-none bg-transparent p-0 backdrop:bg-slate-950/90">
+  <div data-lb-bg class="relative w-full h-full flex items-center justify-center p-4 md:p-10">
+    <img data-lb-img src="" alt=""
+         class="max-w-full max-h-full object-contain rounded-lg shadow-2xl">
+
+    <button data-lb-close type="button" aria-label="Fechar"
+            class="absolute top-4 right-4 h-10 w-10 rounded-full bg-slate-800 hover:bg-slate-700 text-white text-xl">✕</button>
+
+    {% if project.images|length > 1 %}
+    <button data-lb-prev type="button" aria-label="Imagem anterior"
+            class="absolute left-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-slate-800/90 hover:bg-slate-700 text-white text-2xl">‹</button>
+    <button data-lb-next type="button" aria-label="Próxima imagem"
+            class="absolute right-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-slate-800/90 hover:bg-slate-700 text-white text-2xl">›</button>
+    {% endif %}
+  </div>
+</dialog>
+
+<script>
+  document.querySelectorAll('[data-carousel]').forEach(function (c) {
+    var track = c.querySelector('[data-track]');
+    var prev = c.querySelector('[data-prev]');
+    var next = c.querySelector('[data-next]');
+    if (prev) prev.addEventListener('click', function () { track.scrollBy({ left: -track.clientWidth }); });
+    if (next) next.addEventListener('click', function () { track.scrollBy({ left: track.clientWidth }); });
+
+    var dlg = document.querySelector('[data-lightbox]');
+    var big = dlg.querySelector('[data-lb-img]');
+    var imgs = Array.from(track.querySelectorAll('img'));
+    var current = 0;
+
+    function show(i) {
+      current = (i + imgs.length) % imgs.length;
+      big.src = imgs[current].src;
+      big.alt = imgs[current].alt;
+    }
+
+    imgs.forEach(function (img, i) {
+      img.addEventListener('click', function () { show(i); dlg.showModal(); });
+    });
+
+    dlg.querySelector('[data-lb-close]').addEventListener('click', function () { dlg.close(); });
+    var lbPrev = dlg.querySelector('[data-lb-prev]');
+    var lbNext = dlg.querySelector('[data-lb-next]');
+    if (lbPrev) lbPrev.addEventListener('click', function (e) { e.stopPropagation(); show(current - 1); });
+    if (lbNext) lbNext.addEventListener('click', function (e) { e.stopPropagation(); show(current + 1); });
+
+    // clicar no fundo escuro fecha
+    dlg.addEventListener('click', function (e) {
+      if (e.target === dlg || e.target.hasAttribute('data-lb-bg')) dlg.close();
+    });
+
+    // setas do teclado
+    dlg.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') show(current - 1);
+      if (e.key === 'ArrowRight') show(current + 1);
+    });
+  });
+</script>
+{% endif %}
+
+<div class="flex flex-wrap items-center gap-3 mb-16">
   {% if project.repo %}
-  <a href="{{ project.repo }}" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700">Código</a>
+  <a href="{{ project.repo }}" target="_blank" rel="noopener"
+     class="group inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border-2 border-emerald-400 text-emerald-300 font-medium hover:bg-emerald-400 hover:text-slate-950 transition">
+    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/>
+    </svg>
+    Ver código no GitHub
+    <span aria-hidden="true" class="transition group-hover:translate-x-0.5">↗</span>
+  </a>
   {% endif %}
+
   {% if project.demo %}
-  <a href="{{ project.demo }}" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500">Demo</a>
+  <a href="{{ project.demo }}" target="_blank" rel="noopener"
+     class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-500 text-slate-950 font-medium hover:bg-emerald-400 transition">
+    Abrir demo ↗
+  </a>
   {% endif %}
 </div>
+
+<div class="grid gap-12 md:grid-cols-2 mb-16">
+  {% if project.highlights %}
+  <section>
+    <h2 class="text-xl font-semibold mb-3">Funcionalidades</h2>
+    <ul class="list-disc list-inside text-slate-300 space-y-2">
+      {% for h in project.highlights %}<li>{{ h }}</li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% if project.architecture %}
+  <section>
+    <h2 class="text-xl font-semibold mb-4">Arquitetura</h2>
+    <dl class="space-y-2">
+      {% for nome, tech in project.architecture %}
+      <div class="flex justify-between gap-4 p-3 rounded-lg bg-slate-900 border border-slate-800">
+        <dt class="text-slate-500">{{ nome }}</dt>
+        <dd>{{ tech }}</dd>
+      </div>
+      {% endfor %}
+    </dl>
+  </section>
+  {% endif %}
+</div>
+
+{% if project.learned %}
+<section class="mb-16">
+  <h2 class="text-xl font-semibold mb-3">O que aprendi</h2>
+  <p class="text-slate-300 max-w-3xl">{{ project.learned }}</p>
+</section>
+{% endif %}
+
+{% if project.next_steps %}
+<section class="pb-10">
+  <h2 class="text-xl font-semibold mb-3">Próximos passos</h2>
+  <ul class="list-disc list-inside text-slate-300 space-y-1">
+    {% for s in project.next_steps %}<li>{{ s }}</li>{% endfor %}
+  </ul>
+</section>
+{% endif %}
 {% endblock %}

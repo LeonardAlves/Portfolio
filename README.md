@@ -137,4 +137,4 @@ O projeto tem um `Dockerfile` e roda em qualquer plataforma que aceite container
 **Leonardo Alves**
 
 - GitHub: [@LeonardAlves](https://github.com/LeonardAlves)
-- LinkedIn: [seu-usuario](https://www.linkedin.com/in/leonardo-santos-alves/)
+- LinkedIn: [In.LeonardoAlves](https://www.linkedin.com/in/leonardo-santos-alves/)

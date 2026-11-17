@@ -2,10 +2,6 @@
 
 Meu site pessoal de portfólio, onde reúno os projetos que construo enquanto estudo desenvolvimento full stack. O site é renderizado no servidor, com poucas dependências e quase nenhum JavaScript.
 
-**Site:** https://seu-dominio-aqui.dev *(atualize quando estiver no ar)*
-
-![Captura de tela do portfólio](docs/preview.png)
-
 ## Funcionalidades
 
 - Página inicial com apresentação e lista de projetos
@@ -141,4 +137,4 @@ O projeto tem um `Dockerfile` e roda em qualquer plataforma que aceite container
 **Leonardo Alves**
 
 - GitHub: [@LeonardAlves](https://github.com/LeonardAlves)
-- LinkedIn: [seu-usuario](https://linkedin.com/in/seu-usuario)
+- LinkedIn: [seu-usuario](https://www.linkedin.com/in/leonardo-santos-alves/)
